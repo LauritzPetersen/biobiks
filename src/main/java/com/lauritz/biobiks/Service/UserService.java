@@ -3,6 +3,7 @@ package com.lauritz.biobiks.Service;
 import com.lauritz.biobiks.Model.User;
 import com.lauritz.biobiks.Model.intface.UserRepository;
 import com.lauritz.biobiks.Service.validation.UserValidation;
+import com.lauritz.biobiks.Service.validation.ValidationResult;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,19 +27,18 @@ public class UserService {
     }
 
 
-    public List<String> registerUser(User user) {
-        List<String> errors = new ArrayList<>();
+    public ValidationResult registerUser(User user) {
 
-        validation.validateNewUser(user, errors);
+       ValidationResult result = validation.validateNewUser(user);
 
-        if(userRepository.findByEmail(user.getEmail()).isPresent()){
-            errors.add("E-mailen '" + user.getEmail() + "' er allerede i brug");
-        }
+       if(userRepository.findByEmail(user.getEmail()).isPresent()){
+           result.addError("E-mailen '" + user.getEmail() + "' er allerede i brug!");
+       }
 
-        if(errors.isEmpty()){
-            userRepository.save(user);
-        }
+       if(!result.hasErrors()){
+           userRepository.save(user);
+       }
 
-        return errors;
+       return result;
     }
 }

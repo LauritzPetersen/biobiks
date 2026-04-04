@@ -8,17 +8,22 @@ import java.util.List;
 @Component
 public class UserValidation {
 
-    public void validateNewUser(User user, List<String> errors) {
-        if(user.getName() == null || user.getName().trim().isEmpty()){
-            errors.add("Indtast et navn");
-        }
+   public ValidationResult validateNewUser(User user){
 
-        if(user.getEmail() == null || !user.getEmail().contains("@")) {
-            errors.add("Du skal indtaste en gyldig e-mailadresse (skal indeholde @)");
-        }
+       ValidationResult result = new ValidationResult();
 
-        if(user.getAge() < 13) {
-            errors.add("Du skal være 13 for at oprette en konto");
-        }
-    }
+       if(user.getName() == null || user.getName().trim().isEmpty()){
+           result.addError("Du skal indtaste et navn");
+       }
+
+       if(user.getEmail() == null || !user.getEmail().contains("@")){
+           result.addError("Du skal indtaste en  gyldig e-mailadresse (skal indholde @).");
+       }
+
+       if(user.getAge() < 13){
+           result.addError("Du skal være mindst 13 år for at oprette en bruger i BioBiks");
+       }
+
+       return result;
+   }
 }

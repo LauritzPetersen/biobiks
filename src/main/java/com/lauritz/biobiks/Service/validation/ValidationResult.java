@@ -16,6 +16,6 @@ public class ValidationResult {
     }
 
     public List<String> getErrors() {
-        return errors; 
+        return errors;
     }
 }
