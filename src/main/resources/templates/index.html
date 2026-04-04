@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BioBiks - Forside</title>
+</head>
+<body>
+    <h1>Velkommen til BioBiks!</h1>
+    <p>Her er vores aktuelle filmkatalog:</p>
+
+    <div th:each="movie : ${movies}">
+
+        <h3 th:text="${movie.title}">Filmtitel</h3>
+        <p>Genre: <span th:text="${movie.genre}"></span></p>
+        <p>Alder: <span th:text="${movie.ageLimit}"></span>+</p>
+        <p>Pris: <span th:text="${movie.price}"></span> kr.</p>
+        <hr>
+
+    </div>
+
+</body>
+</html>
