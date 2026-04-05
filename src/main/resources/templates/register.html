@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BioBiks - Opret Bruger</title>
+</head>
+<body>
+
+    <h1>Opret en ny profil</h1>
+
+    <div th:if="${errors != null}" style="color: red; border: 1px solid red; padding: 10px; margin-bottom: 15px; max-width: 400px;">
+        <strong>Der var et problem:</strong>
+        <ul>
+            <li th:each="fejl : ${errors}" th:text="${fejl}">Fejlbesked</li>
+        </ul>
+    </div>
+
+    <form th:action="@{/register}" method="post" th:object="${user}">
+
+        <div>
+            <label>Navn:</label>
+            <input type="text" th:field="*{name}">
+        </div>
+        <br>
+
+        <div>
+            <label>E-mail:</label>
+            <input type="email" th:field="*{email}">
+        </div>
+        <br>
+
+        <div>
+            <label>Alder:</label>
+            <input type="number" th:field="*{age}">
+        </div>
+        <br>
+
+        <button type="submit">Opret mig!</button>
+    </form>
+
+    <br>
+    <a href="/">Tilbage til forsiden</a>
+
+</body>
+</html>

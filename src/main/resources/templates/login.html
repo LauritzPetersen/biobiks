@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BioBiks - Log ind</title>
+</head>
+<body>
+
+    <h1>Log ind i BioBiks 🎬</h1>
+
+    <div th:if="${error != null}" style="color: red; margin-bottom: 15px;">
+     <p th:text="${error}">Fejlbesked her</p>
+    </div>
+
+        <form th:action="@{/login}" method="post">
+            <div>
+                <label>Din E-mail:</label>
+                <input type="email" name="email" required>
+            </div>
+            <br>
+            <button type="submit">Log ind</button>
+    </form>
+
+    <br>
+    <p>Har du ikke en profil? <a href="/register">Opret dig her</a></p>
+    <br>
+    <a href="/">Tilbage til forsiden</a>
+
+</body>
+</html>

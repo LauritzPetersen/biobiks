@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BioBiks - Kiosk</title>
+</head>
+<body>
+    <div style="text-align: right; padding: 10px; background-color: #f4f4f4; border-bottom: 1px solid #ccc; margin-bottom: 20px;">
+        <div th:if="${loggedInUser == null}">
+            <a href="/cart">
+                Se Kurv 🛒
+                (<span th:text="${session.cart != null ? session.cart.movies.size() + session.cart.snacks.size() : 0}">0</span>)
+            </a>
+            <span>Gæst</span> |
+            <a href="/">Forside</a> |
+            <a href="/login">Log ind</a> |
+            <a href="/register">Opret profil</a>
+        </div>
+        <div th:if="${loggedInUser != null}">
+            <a href="/cart">
+                Se Kurv 🛒
+                (<span th:text="${session.cart != null ? session.cart.movies.size() + session.cart.snacks.size() : 0}">0</span>)
+            </a>
+            <strong>Velkommen, <span th:text="${loggedInUser.name}">Bruger</span></strong> |
+            <a href="/">Forside</a> |
+            <a href="/logout">Log ud</a>
+        </div>
+    </div>
+
+    <h1>BioBiks Kiosken</h1>
+    <p>Her er vores udvalg af lækre snacks til filmen:</p>
+
+    <ul>
+        <li th:each="snack : ${snacks}" style="margin-bottom: 10px;">
+            <strong th:text="${snack.type}">Type</strong>
+            - Str: <span th:text="${snack.size}">Størrelse</span>
+            - Pris: <span th:text="${snack.price}">Pris</span> kr.
+
+            <form th:action="@{/cart/add-snack}" method="post" style="display: inline-block; margin-left: 15px;">
+                <input type="hidden" name="snackId" th:value="${snack.id}">
+                <button type="submit" style="padding: 3px 10px; background-color: #17a2b8; color: white; border: none; cursor: pointer;">
+                    Tilføj til kurv 🍿
+                </button>
+            </form>
+
+        </li>
+    </ul>
+
+</body>
+</html>

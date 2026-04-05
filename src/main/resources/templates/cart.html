@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BioBiks - Kurv</title>
+</head>
+<body>
+
+    <div style="text-align: right; padding: 10px; background-color: #f4f4f4; border-bottom: 1px solid #ccc; margin-bottom: 20px;">
+         <a href="/">Forside</a> | <a href="/kiosk">Kiosk</a>
+    </div>
+
+    <h1>Din Indkøbskurv 🛒</h1>
+
+    <div th:if="${errors != null}" style="color: red; border: 1px solid red; padding: 10px; margin-bottom: 15px;">
+        <strong>Der var et problem med bestillingen:</strong>
+        <ul>
+             <li th:each="fejl : ${errors}" th:text="${fejl}">Fejl</li>
+        </ul>
+    </div>
+
+    <h3>Biografbilletter:</h3>
+    <ul>
+        <li th:if="${cart.movies.isEmpty()}">Ingen film valgt endnu.</li>
+
+        <li th:each="movie : ${cart.movies}" style="margin-bottom: 10px;">
+
+            <span th:text="${movie.title} + ' - ' + ${movie.price} + ' kr.'">Film</span>
+
+            <form th:action="@{/cart/remove-movie}" method="post" style="display: inline-block; margin-left: 10px;">
+                <input type="hidden" name="movieId" th:value="${movie.id}">
+                <button type="submit" style="background: none; border: none; color: red; cursor: pointer; text-decoration: underline;">
+                    Fjern ❌
+                </button>
+            </form>
+
+        </li>
+    </ul>
+
+    <h3>Snacks:</h3>
+    <ul>
+        <li th:if="${cart.snacks.isEmpty()}">Ingen snacks valgt endnu.</li>
+
+        <li th:each="snack : ${cart.snacks}" style="margin-bottom: 10px;">
+
+            <span th:text="${snack.type} + ' (' + ${snack.size} + ') - ' + ${snack.price} + ' kr.'">Snack</span>
+
+            <form th:action="@{/cart/remove-snack}" method="post" style="display: inline-block; margin-left: 10px;">
+                <input type="hidden" name="snackId" th:value="${snack.id}">
+                <button type="submit" style="background: none; border: none; color: red; cursor: pointer; text-decoration: underline;">
+                    Fjern ❌
+                </button>
+            </form>
+
+        </li>
+    </ul>
+
+    <hr>
+    <h2 th:text="'Samlet Pris: ' + ${cart.totalPrice} + ' kr.'">Total: 0 kr.</h2>
+
+    <br>
+
+    <div th:if="${loggedInUser != null}">
+        <form th:action="@{/cart/checkout}" method="post">
+            <button type="submit" style="background-color: #28a745; color: white; padding: 10px 20px; border: none; font-size: 16px; cursor: pointer;">
+                 Godkend og Betal ✔️
+            </button>
+        </form>
+    </div>
+
+    <div th:if="${loggedInUser == null}" style="background-color: #fff3cd; color: #856404; padding: 15px; border: 1px solid #ffeeba;">
+        <strong>Hov!</strong> Du skal være logget ind for at kunne gennemføre dit køb. <br><br>
+        <a href="/login">Log ind her</a> eller <a href="/register">Opret en profil</a>
+    </div>
+
+</body>
+</html>
