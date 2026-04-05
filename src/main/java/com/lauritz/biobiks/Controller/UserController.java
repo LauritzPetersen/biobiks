@@ -2,6 +2,7 @@ package com.lauritz.biobiks.Controller;
 
 import com.lauritz.biobiks.Model.User;
 import com.lauritz.biobiks.Service.UserService;
+import com.lauritz.biobiks.Service.validation.ValidationResult;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,16 +25,16 @@ public class UserController {
 
     @GetMapping("/register")
     public String showRegisterForm(Model model){
-        model.addAttribute("User", new User());
+        model.addAttribute("user", new User());
         return "register";
     }
 
     @PostMapping("/register")
     public String processRegistration(@ModelAttribute User user, Model model){
 
-        List<String> errors = userService.registerUser(user);
-        if(!errors.isEmpty()){
-            model.addAttribute("errors", errors);
+        ValidationResult result = userService.registerUser(user);
+        if(result.hasErrors()){
+            model.addAttribute("errors", result.getErrors());
             return "register";
         }
 
@@ -41,6 +42,11 @@ public class UserController {
     }
 
     @GetMapping("/login")
+    public String showLoginForm() {
+        return "login"; // Peger på login.html
+    }
+
+    @PostMapping("/login")
     public String processLogin(@RequestParam String email, HttpSession session, Model model) {
         Optional<User> userOpt = userService.loginUser(email);
 

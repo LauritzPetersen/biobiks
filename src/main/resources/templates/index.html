@@ -5,6 +5,31 @@
     <title>BioBiks - Forside</title>
 </head>
 <body>
+<div style="text-align: right; padding: 10px; background-color: #f4f4f4; border-bottom: 1px solid #ccc; margin-bottom: 20px;">
+
+    <div th:if="${loggedInUser == null}">
+        <a href="/cart">
+            Se Kurv 🛒
+            (<span th:text="${session.cart != null ? session.cart.movies.size() + session.cart.snacks.size() : 0}">0</span>)
+        </a>
+        <span>Gæst</span> |
+        <a href="/kiosk">Kiosk</a> |
+        <a href="/login">Log ind</a> |
+        <a href="/register">Opret profil</a>
+    </div>
+
+    <div th:if="${loggedInUser != null}">
+        <a href="/cart">
+            Se Kurv 🛒
+            (<span th:text="${session.cart != null ? session.cart.movies.size() + session.cart.snacks.size() : 0}">0</span>)
+        </a>
+        <a href="/kiosk">Kiosk</a> |
+        <strong>Velkommen, <span th:text="${loggedInUser.name}">Bruger</span></strong> |
+        <a href="/logout">Log ud</a>
+    </div>
+
+</div>
+
     <h1>Velkommen til BioBiks!</h1>
     <p>Her er vores aktuelle filmkatalog:</p>
 
@@ -14,6 +39,12 @@
         <p>Genre: <span th:text="${movie.genre}"></span></p>
         <p>Alder: <span th:text="${movie.ageLimit}"></span>+</p>
         <p>Pris: <span th:text="${movie.price}"></span> kr.</p>
+        <form th:action="@{/cart/add-movie}" method="post" style="margin-top: 10px; margin-bottom: 10px;">
+            <input type="hidden" name="movieId" th:value="${movie.id}">
+            <button type="submit" style="padding: 5px 15px; background-color: #007bff; color: white; border: none; cursor: pointer;">
+                Tilføj til kurv
+            </button>
+        </form>
         <hr>
 
     </div>

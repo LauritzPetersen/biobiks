@@ -9,18 +9,22 @@ import java.util.List;
 @Component
 public class ReservationValidation {
 
-    public void validateNewReservation(User user, List<Movie> selectedMovies, List<String> errors){
+    public ValidationResult validateNewReservation(User user, List<Movie> selectedMovies){
+
+        ValidationResult result = new ValidationResult();
 
         if(selectedMovies == null || selectedMovies.isEmpty()) {
-            errors.add("Ordre skal indeholde minimum en biografbillet");
+            result.addError("Ordre skal indeholde minimum en biografbillet");
         }
         else{
             for(Movie movie : selectedMovies){
                 if(user.getAge() < movie.getAgeLimit()){
-                    errors.add("Du er for ung til at se '" + movie.getTitle() + "'. Minimumsalderen er " + movie.getAgeLimit() + " år");
+                    result.addError("Du er for ung til at se '" + movie.getTitle() + "'. Minimumsalderen er " + movie.getAgeLimit() + " år");
                 }
             }
         }
 
+        return result;
     }
+
 }

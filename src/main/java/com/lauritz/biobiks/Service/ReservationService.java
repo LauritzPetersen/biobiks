@@ -5,6 +5,7 @@ import com.lauritz.biobiks.Model.Snack;
 import com.lauritz.biobiks.Model.User;
 import com.lauritz.biobiks.Model.intface.ReservationRepository;
 import com.lauritz.biobiks.Service.validation.ReservationValidation;
+import com.lauritz.biobiks.Service.validation.ValidationResult;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,21 +24,19 @@ public class ReservationService {
     }
 
 
-    public List<String> createReservation(User user, Reservation reservation) {
-        List<String> errors = new ArrayList<>();
+    public ValidationResult createReservation(User user, Reservation reservation) {
 
-        validation.validateNewReservation(user, reservation.getMovies(), errors);
+        ValidationResult result = validation.validateNewReservation(user, reservation.getMovies());
 
-        if (!errors.isEmpty()) {
-            return errors;
+        if (result.hasErrors()) {
+            return result;
         }
 
         applyComboDiscount(reservation);
-
         reservationRepository.save(reservation);
-
-        return errors;
+        return result;
     }
+
 
 
     private double applyComboDiscount(Reservation reservation) {
