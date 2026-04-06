@@ -21,7 +21,7 @@
                 Se Kurv 🛒
                 (<span th:text="${session.cart != null ? session.cart.movies.size() + session.cart.snacks.size() : 0}">0</span>)
             </a>
-            <strong>Velkommen, <span th:text="${loggedInUser.name}">Bruger</span></strong> |
+            <strong>Velkommen, <a href="/profile" th:text="${loggedInUser.name}" style="color: #007bff; text-decoration: none;">Bruger</a></strong> |
             <a href="/">Forside</a> |
             <a href="/logout">Log ud</a>
         </div>

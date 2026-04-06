@@ -7,7 +7,22 @@
 <body>
 
     <div style="text-align: right; padding: 10px; background-color: #f4f4f4; border-bottom: 1px solid #ccc; margin-bottom: 20px;">
-         <a href="/">Forside</a> | <a href="/kiosk">Kiosk</a>
+
+        <div th:if="${loggedInUser == null}">
+            <span>Gæst</span> |
+            <a href="/">Forside</a> |
+            <a href="/kiosk">Kiosk</a> |
+            <a href="/login">Log ind</a> |
+            <a href="/register">Opret profil</a>
+         </div>
+
+        <div th:if="${loggedInUser != null}">
+            <strong>Velkommen, <a href="/profile" th:text="${loggedInUser.name}" style="color: #007bff; text-decoration: none;">Bruger</a></strong> |
+            <a href="/">Forside</a> |
+            <a href="/kiosk">Kiosk</a> |
+            <a href="/logout">Log ud</a>
+        </div>
+
     </div>
 
     <h1>Din Indkøbskurv 🛒</h1>

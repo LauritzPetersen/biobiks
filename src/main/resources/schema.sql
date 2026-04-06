@@ -14,7 +14,9 @@ CREATE TABLE user (
                       id INT PRIMARY KEY AUTO_INCREMENT,
                       name VARCHAR(50) NOT NULL,
                       email VARCHAR(50) NOT NULL UNIQUE,
-                      age INT NOT NULL
+                      password VARCHAR(255) NOT NULL,
+                      age INT NOT NULL,
+                      balance Double Default 0.0
 );
 
 -- 2. Film tabellen

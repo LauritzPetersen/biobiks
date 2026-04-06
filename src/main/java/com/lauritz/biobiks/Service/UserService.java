@@ -4,6 +4,7 @@ import com.lauritz.biobiks.Model.User;
 import com.lauritz.biobiks.Model.intface.UserRepository;
 import com.lauritz.biobiks.Service.validation.UserValidation;
 import com.lauritz.biobiks.Service.validation.ValidationResult;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,10 +23,23 @@ public class UserService {
     }
 
 
-    public Optional<User> loginUser(String email) {
-        return userRepository.findByEmail(email);
-    }
+    public Optional<User> loginUser(String email, String rawPassword) {
+        Optional<User> userOpt = userRepository.findByEmail(email);
 
+        if(userOpt.isPresent()){
+            User user = userOpt.get();
+
+            try {
+                if (BCrypt.checkpw(rawPassword, user.getPassword())) {
+                    return Optional.of(user);
+                }
+            } catch (IllegalArgumentException e){
+                return Optional.empty();
+            }
+        }
+        return Optional.empty();
+
+    }
 
     public ValidationResult registerUser(User user) {
 
@@ -36,9 +50,25 @@ public class UserService {
        }
 
        if(!result.hasErrors()){
+           String hashedPw = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
+           user.setPassword(hashedPw);
+
            userRepository.save(user);
        }
 
        return result;
     }
+
+    public ValidationResult addFunds(User user, double amount){
+
+        ValidationResult result = validation.validateFundAddition(amount);
+
+        if (!result.hasErrors()) {
+            user.setBalance(user.getBalance() + amount);
+            userRepository.updateBalance(user);
+        }
+
+        return result;
+    }
+
 }

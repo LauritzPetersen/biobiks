@@ -47,15 +47,15 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String processLogin(@RequestParam String email, HttpSession session, Model model) {
-        Optional<User> userOpt = userService.loginUser(email);
+    public String processLogin(@RequestParam String email, @RequestParam String password, HttpSession session, Model model) {
+        Optional<User> userOpt = userService.loginUser(email, password);
 
         if (userOpt.isPresent()) {
             session.setAttribute("loggedInUser", userOpt.get());
             return "redirect:/";
         }
         else {
-            model.addAttribute("error", "Hov! E-mailen findes ikke i vores system.");
+            model.addAttribute("error", "Hov! E-mailen eller kodeordet er forkert.");
             return "login";
         }
     }

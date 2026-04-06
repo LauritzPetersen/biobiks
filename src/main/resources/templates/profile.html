@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="da" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>BioBiks - Min Profil</title>
+</head>
+<body style="font-family: sans-serif; margin: 20px;">
+
+<div style="text-align: right; padding: 10px; background-color: #f4f4f4; border-bottom: 1px solid #ccc; margin-bottom: 20px;">
+    <a href="/">Forside</a> |
+    <a href="/kiosk">Kiosk</a> |
+    <a href="/logout">Log ud</a>
+</div>
+
+<h1>Min Profil 👤</h1>
+
+<div style="border: 1px solid #ddd; padding: 20px; border-radius: 8px; max-width: 400px; margin-bottom: 20px;">
+    <h3>Dine oplysninger:</h3>
+    <p><strong>Navn:</strong> <span th:text="${user.name}"></span></p>
+    <p><strong>Email:</strong> <span th:text="${user.email}"></span></p>
+    <p><strong>Alder:</strong> <span th:text="${user.age}"></span> år</p>
+
+    <hr>
+
+    <h2 style="color: #28a745;">Saldo: <span th:text="${user.balance}">0.0</span> kr.</h2>
+</div>
+
+<div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; max-width: 400px;">
+
+    <div th:if="${errors != null}" style="color: red; border: 1px solid red; padding: 10px; margin-bottom: 15px; max-width: 400px;">
+        <strong>Der var et problem:</strong>
+        <ul>
+            <li th:each="fejl : ${errors}" th:text="${fejl}">Fejlbesked</li>
+        </ul>
+    </div>
+
+    <h3>Indsæt penge på kontoen 💳</h3>
+
+    <form th:action="@{/profile/add-funds}" method="post">
+        <label>Beløb (kr):</label><br>
+        <input type="number" name="amount" min="1" step="1" required style="padding: 5px; margin-top: 5px; margin-bottom: 15px;">
+        <br>
+        <button type="submit" style="background-color: #007bff; color: white; padding: 8px 15px; border: none; cursor: pointer; border-radius: 4px;">
+            Indsæt Penge
+        </button>
+    </form>
+</div>
+
+</body>
+</html>

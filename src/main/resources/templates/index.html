@@ -24,7 +24,7 @@
             (<span th:text="${session.cart != null ? session.cart.movies.size() + session.cart.snacks.size() : 0}">0</span>)
         </a>
         <a href="/kiosk">Kiosk</a> |
-        <strong>Velkommen, <span th:text="${loggedInUser.name}">Bruger</span></strong> |
+        <strong>Velkommen, <a href="/profile" th:text="${loggedInUser.name}" style="color: #007bff; text-decoration: none;">Bruger</a></strong> |
         <a href="/logout">Log ud</a>
     </div>
 

@@ -25,21 +25,28 @@ public class JdbcUserRepository implements UserRepository {
                 rs.getInt("id"),
                 rs.getString("name"),
                 rs.getString("email"),
-                rs.getInt("age")
+                rs.getString("password"),
+                rs.getInt("age"),
+                rs.getDouble("balance")
         ), email);
 
         // Hvis listen er tom, returnerer vi bare en tom boks (ingen fejl/crashes)
         if (result.isEmpty()) {
             return Optional.empty();
         }
-
         // Ellers pakker vi den første (og eneste) bruger ind og sender tilbage
         return Optional.of(result.get(0));
     }
 
     @Override
     public void save(User user) {
-        String sql = "INSERT INTO user (name, email, age) VALUES (?, ?, ?)";
-        jdbcTemplate.update(sql, user.getName(), user.getEmail(), user.getAge());
+        String sql = "INSERT INTO user (name, email, password, age, balance) VALUES (?, ?, ?, ?, ?)";
+        jdbcTemplate.update(sql, user.getName(), user.getEmail(), user.getPassword(), user.getAge(), user.getBalance());
+    }
+
+    @Override
+    public void updateBalance(User user) {
+        String sql = "UPDATE user SET balance = ? WHERE id = ?";
+        jdbcTemplate.update(sql, user.getBalance(), user.getId());
     }
 }

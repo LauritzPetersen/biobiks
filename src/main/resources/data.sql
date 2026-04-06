@@ -1,6 +1,7 @@
 -- Opret et par test-brugere
-INSERT INTO user (name, email, age) VALUES ('Peter Parker', 'peter@spider.com', 17);
-INSERT INTO user (name, email, age) VALUES ('Bruce Wayne', 'bruce@batman.com', 35);
+INSERT INTO user (name, email, password, age) VALUES ('Peter Parker', 'peter@spider.com', '$2a$10$BqbYDg8YnqUfS5RGsvZOMujgnPoSfe2yn0rQrdr8bIXFtOLprSvoS', 17);
+INSERT INTO user (name, email, password, age) VALUES ('Bruce Wayne', 'bruce@batman.com', '$2a$10$BqbYDg8YnqUfS5RGsvZOMujgnPoSfe2yn0rQrdr8bIXFtOLprSvoS', 35);
+-- koder er 123456
 
 -- Opret et par test-film i biografen
 INSERT INTO movie (title, genre, age_limit, price) VALUES ('Gurli Gris i Biografen', 'Børn', 0, 75.0);
