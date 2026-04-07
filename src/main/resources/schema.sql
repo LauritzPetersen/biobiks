@@ -1,6 +1,6 @@
 -- 1. Slet krydstabellerne først, da de afhænger af de andre tabeller
 DROP TABLE IF EXISTS reservation_snack;
-DROP TABLE IF EXISTS reservation_movie;
+DROP TABLE IF EXISTS ticket;
 
 -- 2. Slet derefter reservationer, da de afhænger af brugere
 DROP TABLE IF EXISTS reservation;
@@ -38,11 +38,14 @@ CREATE TABLE reservation (
 );
 
 -- 4. KRYDSTABELLEN (Mange-til-Mange relation)
-CREATE TABLE reservation_movie (
-                                   reservation_id INT NOT NULL,
-                                   movie_id INT NOT NULL,
-                                   FOREIGN KEY (reservation_id) REFERENCES reservation(id),
-                                   FOREIGN KEY (movie_id) REFERENCES movie(id)
+CREATE TABLE ticket (
+                        id INT PRIMARY KEY AUTO_INCREMENT,
+                        reservation_id INT NOT NULL,
+                        movie_id INT NOT NULL,
+                        show_date DATE NOT NULL,
+                        show_time TIME NOT NULL,
+                        FOREIGN KEY (reservation_id) REFERENCES reservation(id),
+                        FOREIGN KEY (movie_id) REFERENCES movie(id)
 );
 
 -- Kiosk-menuen

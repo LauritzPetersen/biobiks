@@ -36,14 +36,16 @@
 
     <h3>Biografbilletter:</h3>
     <ul>
-        <li th:if="${cart.movies.isEmpty()}">Ingen film valgt endnu.</li>
+        <li th:if="${cart.tickets.isEmpty()}">Ingen billetter valgt endnu.</li>
 
-        <li th:each="movie : ${cart.movies}" style="margin-bottom: 10px;">
+        <li th:each="ticket, iterStat : ${cart.tickets}" style="margin-bottom: 10px;">
 
-            <span th:text="${movie.title} + ' - ' + ${movie.price} + ' kr.'">Film</span>
+            <strong th:text="${ticket.movie.title}">Film</strong>
+            <span th:text="' - ' + ${#temporals.format(ticket.showDate, 'dd-MM-yyyy')} + ' kl. ' + ${ticket.showTime}">Dato og tid</span>
+            <span th:text="' (' + ${ticket.movie.price} + ' kr.)'" style="color: #555;">Pris</span>
 
-            <form th:action="@{/cart/remove-movie}" method="post" style="display: inline-block; margin-left: 10px;">
-                <input type="hidden" name="movieId" th:value="${movie.id}">
+            <form th:action="@{/cart/remove-ticket}" method="post" style="display: inline-block; margin-left: 10px;">
+                <input type="hidden" name="ticketIndex" th:value="${iterStat.index}">
                 <button type="submit" style="background: none; border: none; color: red; cursor: pointer; text-decoration: underline;">
                     Fjern ❌
                 </button>

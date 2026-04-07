@@ -13,9 +13,8 @@ INSERT INTO movie (title, genre, age_limit, price) VALUES ('Motorsavsmassakren',
 -- Vi kan oprette en test-reservation (Peter køber 2 billetter til Busters Verden):
 INSERT INTO reservation (user_id, reservation_date, total_price) VALUES (1, NOW(), 250.0);
 
--- Og her binder vi filmene til reservationen via krydstabellen!
-INSERT INTO reservation_movie (reservation_id, movie_id) VALUES (1, 2); -- Billet 1
-INSERT INTO reservation_movie (reservation_id, movie_id) VALUES (1, 2); -- Billet 2
+INSERT INTO ticket (reservation_id, movie_id, show_date, show_time) VALUES (1, 2, '2024-12-24', '17:00:00');
+INSERT INTO ticket (reservation_id, movie_id, show_date, show_time) VALUES (1, 2, '2024-12-24', '17:00:00');
 
 -- Opret snacks med type og størrelse
 INSERT INTO snack (type, size, price) VALUES ('Popcorn', 'Lille', 35.0);

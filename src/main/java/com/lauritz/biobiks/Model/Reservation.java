@@ -10,7 +10,7 @@ public class Reservation {
     private LocalDateTime reservationDate;
     private double totalPrice = 0.0;
 
-    private List<Movie> movies = new ArrayList<>();
+    private List<Ticket> tickets = new ArrayList<>();
     private List<Snack> snacks = new ArrayList<>();
 
     public Reservation() {}
@@ -36,15 +36,15 @@ public class Reservation {
     public double getTotalPrice(){return totalPrice;}
     public void setTotalPrice(double totalPrice){this.totalPrice = totalPrice;}
 
-    public List<Movie> getMovies() {return movies;}
-    public void setMovies(List<Movie> movies) {this.movies = movies;}
+    public List<Ticket> getTickets() { return tickets; }
+    public void setTickets(List<Ticket> tickets) { this.tickets = tickets; }
 
     public List<Snack> getSnacks() {return snacks;}
     public void setSnacks(List<Snack> snacks) {this.snacks = snacks;}
 
-    public void orderMovie(Movie movie) {
-        this.movies.add(movie);
-        this.totalPrice += movie.getPrice();
+    public void addTicket(Ticket ticket) {
+        this.tickets.add(ticket);
+        this.totalPrice += ticket.getMovie().getPrice();
     }
 
     public void orderSnack(Snack snack) {

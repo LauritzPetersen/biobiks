@@ -4,6 +4,7 @@ import com.lauritz.biobiks.Model.Reservation;
 import com.lauritz.biobiks.Model.Snack;
 import com.lauritz.biobiks.Model.User;
 import com.lauritz.biobiks.Model.intface.ReservationRepository;
+import com.lauritz.biobiks.Model.intface.UserRepository;
 import com.lauritz.biobiks.Service.validation.ReservationValidation;
 import com.lauritz.biobiks.Service.validation.ValidationResult;
 import org.springframework.stereotype.Service;
@@ -17,23 +18,34 @@ public class ReservationService {
     // Vi trækker vores Repository og Validering ind (Dependency Injection)
     private final ReservationRepository reservationRepository;
     private final ReservationValidation validation;
+    private final UserRepository userRepository;
 
-    public ReservationService(ReservationRepository reservationRepository, ReservationValidation validation) {
+    public ReservationService(ReservationRepository reservationRepository, ReservationValidation validation, UserRepository userRepository) {
         this.reservationRepository = reservationRepository;
         this.validation = validation;
+        this.userRepository = userRepository;
     }
 
 
     public ValidationResult createReservation(User user, Reservation reservation) {
 
         ValidationResult result = validation.validateNewReservation(user, reservation.getMovies());
-
         if (result.hasErrors()) {
             return result;
         }
 
         applyComboDiscount(reservation);
+
+        validation.validateSufficientFunds(user, reservation.getTotalPrice(), result);
+        if (result.hasErrors()) {
+            return result;
+        }
+
+        user.setBalance(user.getBalance() - reservation.getTotalPrice());
+        userRepository.updateBalance(user);
+
         reservationRepository.save(reservation);
+
         return result;
     }
 

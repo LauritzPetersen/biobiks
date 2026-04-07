@@ -1,10 +1,12 @@
 package com.lauritz.biobiks.Controller;
 
 import com.lauritz.biobiks.Model.Reservation;
+import com.lauritz.biobiks.Model.Ticket;
 import com.lauritz.biobiks.Model.User;
 import com.lauritz.biobiks.Service.MovieService;
 import com.lauritz.biobiks.Service.ReservationService;
 import com.lauritz.biobiks.Service.SnackService;
+import com.lauritz.biobiks.Service.validation.TicketValidation;
 import com.lauritz.biobiks.Service.validation.ValidationResult;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
@@ -12,8 +14,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Controller
 public class CartController {
@@ -21,11 +26,16 @@ public class CartController {
     private final MovieService movieService;
     private final ReservationService reservationService;
     private final SnackService snackService;
+    private final TicketValidation ticketValidation;
 
-    public CartController(MovieService movieService, ReservationService reservationService, SnackService snackService){
+    public CartController(MovieService movieService,
+                          ReservationService reservationService,
+                          SnackService snackService,
+                          TicketValidation ticketValidation){
         this.movieService = movieService;
         this.reservationService = reservationService;
         this.snackService = snackService;
+        this.ticketValidation = ticketValidation;
     }
 
     private Reservation getCart(HttpSession session){
@@ -37,11 +47,30 @@ public class CartController {
         return cart;
     }
 
-    @PostMapping("/cart/add-movie")
-    public String addMovieToCart(@RequestParam int movieId, HttpSession session){
+    @PostMapping("/cart/add-ticket")
+    public String addTicketToCart(@RequestParam int movieId,
+                                  @RequestParam LocalDate showDate,
+                                  @RequestParam LocalTime showTime,
+                                  @RequestParam int quantity,
+                                  HttpSession session,
+                                  RedirectAttributes redirectAttributes) {
+
+        ValidationResult result = ticketValidation.validateTicketQuantity(quantity);
+        if (result.hasErrors()) {
+            redirectAttributes.addFlashAttribute("errors", result.getErrors());
+            return "redirect:/movie/" + movieId;
+        }
+
         Reservation cart = getCart(session);
-        movieService.getMovieById(movieId).ifPresent(cart::orderMovie);
-        return "redirect:/";
+
+        movieService.getMovieById(movieId).ifPresent(movie -> {
+            for (int i = 0; i < quantity; i++) {
+                Ticket nyBillet = new Ticket(movie, showDate, showTime);
+                cart.addTicket(nyBillet);
+            }
+        });
+
+        return "redirect:/movies";
     }
 
     @PostMapping("/cart/add-snack")
@@ -61,17 +90,15 @@ public class CartController {
         return "cart";
     }
 
-    @PostMapping("/cart/remove-movie")
-    public String removeMovieFromCart(@RequestParam int movieId, HttpSession session) {
+    @PostMapping("/cart/remove-ticket")
+    public String removeTicketFromCart(@RequestParam int ticketIndex, HttpSession session) {
         Reservation cart = getCart(session);
 
-        // Vi løber kurvens film igennem for at finde den, der skal slettes
-        for (int i = 0; i < cart.getMovies().size(); i++) {
-            if (cart.getMovies().get(i).getId() == movieId) {
-                cart.setTotalPrice(cart.getTotalPrice() - cart.getMovies().get(i).getPrice());
-                cart.getMovies().remove(i);
-                break;
-            }
+        // Vi fjerner billetten baseret på dens plads i listen (index)
+        if (ticketIndex >= 0 && ticketIndex < cart.getTickets().size()) {
+            Ticket ticketToRemove = cart.getTickets().get(ticketIndex);
+            cart.setTotalPrice(cart.getTotalPrice() - ticketToRemove.getMovie().getPrice());
+            cart.getTickets().remove(ticketIndex);
         }
         return "redirect:/cart";
     }
@@ -114,6 +141,8 @@ public class CartController {
 
         // SUCCES! Vi sletter kurven fra rygsækken, så den er tom til næste gang
         session.removeAttribute("cart");
+        // Opdaterer den loggede bruger i sessionen, fordi deres balance måske er ændret
+        session.setAttribute("loggedInUser", loggedInUser);
 
         return "redirect:/cart/confirmation";
     }

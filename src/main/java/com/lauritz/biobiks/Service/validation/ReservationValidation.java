@@ -27,4 +27,10 @@ public class ReservationValidation {
         return result;
     }
 
+    public void validateSufficientFunds(User user, double finalPrice, ValidationResult result) {
+        if (user.getBalance() < finalPrice) {
+            result.addError("Du har ikke penge nok på kontoen. Din saldo er " + user.getBalance() + " kr, men ordren koster " + finalPrice + " kr.");
+        }
+    }
+
 }
