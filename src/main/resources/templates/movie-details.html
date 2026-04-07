@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BioBiks - Billetkøb</title>
+</head>
+<body style="font-family: sans-serif; margin: 20px;">
+
+<a href="/movies" style="text-decoration: none; color: #007bff;">&larr; Tilbage til programmet</a>
+
+<div style="margin-top: 20px; padding: 30px; border: 1px solid #ddd; max-width: 600px; border-radius: 8px; background-color: #fff;">
+    <h1 th:text="${movie.title}">Filmtitel</h1>
+
+    <div style="margin-bottom: 20px;">
+        <span style="display: inline-block; background: #eee; padding: 5px 10px; border-radius: 15px; font-size: 14px; margin-right: 10px;" th:text="${movie.genre}">Genre</span>
+        <span style="display: inline-block; background: #ffc107; color: #000; padding: 5px 10px; border-radius: 15px; font-size: 14px;" th:text="${movie.ageLimit} + '+'">Alder</span>
+    </div>
+
+    <p>Her kommer en spændende beskrivelse af filmen senere...</p>
+
+    <hr style="margin: 30px 0;">
+
+    <h3>Køb Billetter</h3>
+    <p style="color: #666;">(Dato og tids-vælger kommer i næste opdatering!)</p>
+
+    <h2 style="color: #28a745;">Pris pr. stk: <span th:text="${movie.price}"></span> kr.</h2>
+
+    <div th:if="${errors != null}" style="color: red; border: 1px solid red; padding: 10px; margin-bottom: 15px;">
+        <strong>Hov:</strong>
+        <ul>
+            <li th:each="fejl : ${errors}" th:text="${fejl}">Fejlbesked</li>
+        </ul>
+    </div>
+
+    <form th:action="@{/cart/add-ticket}" method="post">
+        <input type="hidden" name="movieId" th:value="${movie.id}">
+
+        <div style="margin-bottom: 15px;">
+            <label><strong>Vælg dato:</strong></label><br>
+            <input type="date" name="showDate" required style="padding: 8px; margin-top: 5px; border-radius: 4px; border: 1px solid #ccc;">
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <label><strong>Vælg tidspunkt:</strong></label><br>
+            <select name="showTime" required style="padding: 8px; margin-top: 5px; border-radius: 4px; border: 1px solid #ccc; width: 150px;">
+                <option value="13:30">13:30</option>
+                <option value="17:00">17:00</option>
+                <option value="20:30">20:30</option>
+            </select>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <label><strong>Antal billetter:</strong></label><br>
+            <input type="number" name="quantity" value="1" min="1" max="10" required style="padding: 8px; margin-top: 5px; border-radius: 4px; border: 1px solid #ccc; width: 100px;">
+        </div>
+
+        <button type="submit" style="padding: 12px 25px; background-color: #28a745; color: white; border: none; cursor: pointer; border-radius: 4px; font-size: 16px; font-weight: bold;">
+            Læg billet i kurv 🎟️
+        </button>
+    </form>
+</div>
+
+</body>
+</html>

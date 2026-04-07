@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BioBiks - Biografprogram</title>
+</head>
+<body style="font-family: sans-serif; margin: 20px;">
+
+<div style="text-align: right; padding: 10px; background-color: #f4f4f4; border-bottom: 1px solid #ccc; margin-bottom: 20px;">
+    <div th:if="${loggedInUser == null}">
+        <a href="/cart">Se Kurv 🛒 (<span th:text="${session.cart != null ? session.cart.movies.size() + session.cart.snacks.size() : 0}">0</span>)</a> |
+        <a href="/">Forside</a> | <span>Katalog</span> | <a href="/kiosk">Kiosk</a> |
+        <a href="/login">Log ind</a> | <a href="/register">Opret profil</a>
+    </div>
+    <div th:if="${loggedInUser != null}">
+        <a href="/cart">Se Kurv 🛒 (<span th:text="${session.cart != null ? session.cart.movies.size() + session.cart.snacks.size() : 0}">0</span>)</a> |
+        <a href="/">Forside</a> | <span>Katalog</span> | <a href="/kiosk">Kiosk</a> |
+        <strong>Velkommen, <a href="/profile" th:text="${loggedInUser.name}" style="color: #007bff; text-decoration: none;">Bruger</a></strong> |
+        <a href="/logout">Log ud</a>
+    </div>
+</div>
+
+<h1>Biografprogrammet 🎬</h1>
+<p>Vælg en film for at se spilletider og bestille billetter.</p>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; margin-top: 20px;">
+
+    <div th:each="movie : ${movies}" style="border: 1px solid #ddd; padding: 20px; border-radius: 8px; width: 250px; text-align: center; background-color: #fafafa;">
+        <div style="height: 350px; background-color: #333; color: white; display: flex; align-items: center; justify-content: center; margin-bottom: 15px; border-radius: 4px;">
+            <span th:text="${movie.title}">Plakat</span>
+        </div>
+
+        <h3 th:text="${movie.title}" style="margin: 10px 0;">Filmtitel</h3>
+        <p style="color: #666; margin-bottom: 15px;">Genre: <span th:text="${movie.genre}"></span></p>
+
+        <a th:href="@{/movie/{id}(id=${movie.id})}" style="display: block; padding: 10px; background-color: #007bff; color: white; text-decoration: none; border-radius: 4px; font-weight: bold;">
+            Se filmen
+        </a>
+    </div>
+
+</div>
+
+</body>
+</html>
